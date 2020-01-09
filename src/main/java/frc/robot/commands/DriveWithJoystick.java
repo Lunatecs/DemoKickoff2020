@@ -25,6 +25,7 @@ public class DriveWithJoystick extends CommandBase {
     this.driveTrain = driveTrain;
     this.speed = speed;
     this.rotation = rotation;
+    addRequirements(driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -35,6 +36,7 @@ public class DriveWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    driveTrain.arcadeDrive(speed.getAsDouble(), rotation.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
