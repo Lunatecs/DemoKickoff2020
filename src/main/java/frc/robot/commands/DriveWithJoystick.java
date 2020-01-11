@@ -37,7 +37,7 @@ public class DriveWithJoystick extends CommandBase {
   @Override
   public void execute() {
     if (Math.abs(speed.getAsDouble()) > 0.15 || Math.abs(rotation.getAsDouble()) > 0.15) {
-      driveTrain.arcadeDrive(speed.getAsDouble(), rotation.getAsDouble());
+      driveTrain.arcadeDrive((speed.getAsDouble()), rotation.getAsDouble());
     }else{
       driveTrain.arcadeDrive(0,0);
     }
