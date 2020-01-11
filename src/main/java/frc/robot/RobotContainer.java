@@ -10,12 +10,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import static frc.robot.Constants.ControllerConstants;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -29,9 +35,10 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
-  private final Joystick driverJoystick = new Joystick(0);
+  private final Joystick driverJoystick = new Joystick(ControllerConstants.Joystick_USB_Driver);
 
   private final DriveTrain driveTrain = new DriveTrain();
+  private final LimeLight limeLight = new LimeLight();
 
 
   private final DriveWithJoystick joystickDrive = new DriveWithJoystick(driveTrain, 
@@ -54,6 +61,20 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    PIDController pidController = new PIDController(
+          DriveTrainConstants.Proportional, 
+          DriveTrainConstants.Integral, 
+          DriveTrainConstants.Derivative);
+    pidController.setTolerance(.05);
+    pidController.setIntegratorRange(-0.7, 0.7);
+    new JoystickButton(driverJoystick, ControllerConstants.Green_Button_ID).whenHeld(
+      new PIDCommand(
+          pidController,
+           limeLight::getTX, 
+           0.0, 
+           output -> driveTrain.arcadeDrive(0.0, -output), 
+           driveTrain));
+           
   }
 
   private void configureDefaultCommands() {

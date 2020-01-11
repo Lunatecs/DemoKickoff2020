@@ -25,5 +25,24 @@ public final class Constants {
         public static final int Left_Front_ID = 3;
         public static final int Left_Middle_ID = 2;
         public static final int Left_Back_ID = 1;
+
+        public static final double Proportional = 0.05;
+        public static final double Integral = 0.1;
+        public static final double Derivative = 0.005;
+    }
+    
+    public static final class ControllerConstants {
+        public static int Joystick_USB_Driver = 0;
+        public static int Joystick_USB_Operator = 1;
+
+        public static int Joystick_Right_X_Axis = 4;
+        public static int Joystick_Right_Y_Axis = 5;
+        public static int Joystick_Left_X_Axis = 0;
+        public static int Joystick_Left_Y_Axis = 1;
+
+        public static int Red_Button_ID = 2;
+        public static int Green_Button_ID = 1;
+        public static int Yellow_Button_ID = 4;
+        public static int Blue_Button_ID = 3;
     }
 }
