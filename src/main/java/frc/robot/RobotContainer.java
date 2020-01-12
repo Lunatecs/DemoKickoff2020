@@ -61,25 +61,39 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    PIDController pidController = new PIDController(
-          DriveTrainConstants.Proportional, 
-          DriveTrainConstants.Integral, 
-          DriveTrainConstants.Derivative);
-    pidController.setTolerance(.05);
-    pidController.setIntegratorRange(-0.7, 0.7);
+    PIDController firstPIDController = new PIDController(
+          DriveTrainConstants.TrackingProportional, 
+          DriveTrainConstants.TrackingIntegral, 
+          DriveTrainConstants.TrackingDerivative);
+    firstPIDController.setTolerance(.05);
+    firstPIDController.setIntegratorRange(-0.7, 0.7);
     new JoystickButton(driverJoystick, ControllerConstants.Green_Button_ID).whenHeld(
       new PIDCommand(
-          pidController,
+          firstPIDController,
            limeLight::getTX, 
            0.0, 
            output -> driveTrain.arcadeDrive(0.0, -output), 
            driveTrain));
-           
+
+
+    PIDController distanceWallPIDController = new PIDController(
+          DriveTrainConstants.WallProportional,
+          DriveTrainConstants.WallIntegral,
+          DriveTrainConstants.WallDerivative
+    );
+    new JoystickButton(driverJoystick, ControllerConstants.Yellow_Button_ID).whenHeld(
+      new PIDCommand(
+        distanceWallPIDController, 
+        driveTrain::getRange, 
+        10.0, 
+        output -> driveTrain.arcadeDrive(driverJoystick.getRawAxis(ControllerConstants.Joystick_Left_Y_Axis), output), 
+        driveTrain));
   }
 
   private void configureDefaultCommands() {
     CommandScheduler scheduler = CommandScheduler.getInstance();
     scheduler.setDefaultCommand(driveTrain, joystickDrive);
+    //scheduler.registerSubsystem(driveTrain);
   }
 
   /**

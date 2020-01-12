@@ -13,7 +13,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import static frc.robot.Constants.DriveTrainConstants;
 
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -25,6 +27,8 @@ public class DriveTrain extends SubsystemBase {
   private final WPI_VictorSPX rightFront = new WPI_VictorSPX(DriveTrainConstants.Right_Front_ID);
   private final WPI_VictorSPX rightMiddle = new WPI_VictorSPX(DriveTrainConstants.Right_Middle_ID);
   private final WPI_TalonSRX rightBack = new WPI_TalonSRX(DriveTrainConstants.Right_Back_ID);
+
+  private final Ultrasonic distanceSensor = new  Ultrasonic(DriveTrainConstants.Ultrasonic_Ping_ID, DriveTrainConstants.Ultrasonic_Echo_ID);
 
   private static NeutralMode DRIVE_NEUTRALMODE = NeutralMode.Brake;
 
@@ -55,6 +59,7 @@ public class DriveTrain extends SubsystemBase {
     rightFront.follow(rightBack);
     rightMiddle.follow(rightBack);
 
+    distanceSensor.setAutomaticMode(true);
     drive = new DifferentialDrive(leftBack, rightBack);
   }
 
@@ -62,8 +67,13 @@ public class DriveTrain extends SubsystemBase {
     drive.arcadeDrive(speed, rotation);
   }
 
+  public double getRange(){
+    return distanceSensor.getRangeInches();
+  }
+
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Distance", this.getRange());
     // This method will be called once per scheduler run
   }
 }

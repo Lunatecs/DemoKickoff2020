@@ -26,9 +26,16 @@ public final class Constants {
         public static final int Left_Middle_ID = 2;
         public static final int Left_Back_ID = 1;
 
-        public static final double Proportional = 0.05;
-        public static final double Integral = 0.1;
-        public static final double Derivative = 0.005;
+        public static final int Ultrasonic_Ping_ID = 8;
+        public static final int Ultrasonic_Echo_ID = 9;
+
+        public static final double TrackingProportional = 0.07;
+        public static final double TrackingIntegral = 0.025;
+        public static final double TrackingDerivative = 0.005;
+
+        public static final double WallProportional = 0.6;
+        public static final double WallIntegral = 2.4;
+        public static final double WallDerivative = 0.0375;
     }
     
     public static final class ControllerConstants {
