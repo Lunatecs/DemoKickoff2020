@@ -36,6 +36,9 @@ public final class Constants {
         public static final double WallProportional = 0.6;
         public static final double WallIntegral = 2.4;
         public static final double WallDerivative = 0.0375;
+
+        public static final double MaxSpeedMetersPerSecond = 4.2672;
+        public static final double MaxAccelerationMetersPerSecondSquared = 3.6576;
     }
     
     public static final class ControllerConstants {

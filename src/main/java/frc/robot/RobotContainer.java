@@ -19,9 +19,12 @@ import frc.robot.subsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import static frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ControllerConstants;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -88,6 +91,23 @@ public class RobotContainer {
         10.0, 
         output -> driveTrain.arcadeDrive(driverJoystick.getRawAxis(ControllerConstants.Joystick_Left_Y_Axis), output), 
         driveTrain));
+
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveTrainConstants.MaxSpeedMetersPerSecond,
+                                                                    DriveTrainConstants.MaxAccelerationMetersPerSecondSquared);
+
+    new JoystickButton(driverJoystick, ControllerConstants.Red_Button_ID).whenHeld(
+      new TrapezoidProfileCommand(
+                new TrapezoidProfile(
+                    // Limit the max acceleration and velocity
+                    new TrapezoidProfile.Constraints(
+                      DriveTrainConstants.MaxSpeedMetersPerSecond,
+                      DriveTrainConstants.MaxAccelerationMetersPerSecondSquared),
+                    // End at desired position in meters; implicitly starts at 0
+                    new TrapezoidProfile.State(1, 0)),
+                // Pipe the profile state to the drive
+                setpointState -> driveTrain.arcadeDrive(feedforward.calculate(setpointState.velocity)/12.0, 0),
+                // Require the drive
+                driveTrain));
   }
 
   private void configureDefaultCommands() {
