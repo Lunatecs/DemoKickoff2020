@@ -67,6 +67,14 @@ public class DriveTrain extends SubsystemBase {
     drive.arcadeDrive(speed, rotation);
   }
 
+  public double getLeftEncoder() {
+    return leftBack.getSelectedSensorPosition(0);
+  }
+
+  public double getRightEncoder() {
+    return rightBack.getSelectedSensorPosition(0);
+  }
+
   public double getRange(){
     return distanceSensor.getRangeInches();
   }
@@ -74,6 +82,8 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Distance", this.getRange());
+    SmartDashboard.putNumber("R Encoder", this.getRightEncoder());
+    SmartDashboard.putNumber("L Encoder", this.getLeftEncoder());
     // This method will be called once per scheduler run
   }
 }
