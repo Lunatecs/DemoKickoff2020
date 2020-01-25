@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import static frc.robot.Constants.DriveTrainConstants;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,6 +34,8 @@ public class DriveTrain extends SubsystemBase {
   private static NeutralMode DRIVE_NEUTRALMODE = NeutralMode.Brake;
 
   private DifferentialDrive drive;
+
+  private PIDController pidController = new PIDController(0.0001, 0, 0);
   /**
    * Creates a new DriveTrain.
    */
@@ -61,6 +64,7 @@ public class DriveTrain extends SubsystemBase {
 
     distanceSensor.setAutomaticMode(true);
     drive = new DifferentialDrive(leftBack, rightBack);
+    
   }
 
   public void arcadeDrive(double speed, double rotation){
@@ -83,11 +87,24 @@ public class DriveTrain extends SubsystemBase {
     return distanceSensor.getRangeInches();
   }
 
+  public void resetEncoders() {
+    this.rightBack.setSelectedSensorPosition(0);
+    this.leftBack.setSelectedSensorPosition(0);
+  }
+
+  public double getRotation() {
+    double rot = pidController.calculate(this.getLeftEncoder()+this.getRightEncoder());
+    SmartDashboard.putNumber("PID Output", rot);
+    return rot;
+    //return pidController.calculate(this.getLeftEncoder()+this.getRightEncoder());
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Distance", this.getRange());
     SmartDashboard.putNumber("R Encoder", this.getRightEncoder());
     SmartDashboard.putNumber("L Encoder", this.getLeftEncoder());
+    SmartDashboard.putNumber("Rotion Error", this.getLeftEncoder()+this.getRightEncoder());
     // This method will be called once per scheduler run
   }
 }
