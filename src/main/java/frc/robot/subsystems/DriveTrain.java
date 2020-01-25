@@ -67,6 +67,10 @@ public class DriveTrain extends SubsystemBase {
     drive.arcadeDrive(speed, rotation);
   }
 
+  public void tankDrive(double left, double right) {
+    drive.tankDrive(left, right);
+  }
+
   public double getLeftEncoder() {
     return leftBack.getSelectedSensorPosition(0);
   }
