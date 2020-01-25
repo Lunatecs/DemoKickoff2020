@@ -38,7 +38,11 @@ public final class Constants {
         public static final double WallDerivative = 0.0375;
 
         public static final double MaxSpeedMetersPerSecond = 4.2672;
-        public static final double MaxAccelerationMetersPerSecondSquared = 3.6576;
+        public static final double MaxAccelerationMetersPerSecondSquared = 2.025;///3.6576;
+
+        public static final double KS = 0.722;//0.861; //0.39;
+        public static final double KV = 0.643;//1.242; //0.631
+        public static final double KA = 0.8003;//0.196; //0.098
     }
     
     public static final class ControllerConstants {

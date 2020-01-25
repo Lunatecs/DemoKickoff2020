@@ -92,22 +92,25 @@ public class RobotContainer {
         output -> driveTrain.arcadeDrive(driverJoystick.getRawAxis(ControllerConstants.Joystick_Left_Y_Axis), output), 
         driveTrain));
 
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveTrainConstants.MaxSpeedMetersPerSecond,
-                                                                    DriveTrainConstants.MaxAccelerationMetersPerSecondSquared);
+    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveTrainConstants.KS,
+                                                                    DriveTrainConstants.KV,
+                                                                    DriveTrainConstants.KA);
 
     new JoystickButton(driverJoystick, ControllerConstants.Red_Button_ID).whenHeld(
       new TrapezoidProfileCommand(
                 new TrapezoidProfile(
                     // Limit the max acceleration and velocity
                     new TrapezoidProfile.Constraints(
+                     //DriveTrainConstants.KV,
+                     //DriveTrainConstants.KA),
                       DriveTrainConstants.MaxSpeedMetersPerSecond,
                       DriveTrainConstants.MaxAccelerationMetersPerSecondSquared),
                     // End at desired position in meters; implicitly starts at 0
-                    new TrapezoidProfile.State(1, 0)),
+                    new TrapezoidProfile.State(4, 0)),
                 // Pipe the profile state to the drive
-                setpointState -> driveTrain.arcadeDrive(feedforward.calculate(setpointState.velocity)/12.0, 0),
+                setpointState -> driveTrain.arcadeDrive(-feedforward.calculate(setpointState.velocity)/12.0, driveTrain.getRotation()),
                 // Require the drive
-                driveTrain));
+                driveTrain).beforeStarting(() -> driveTrain.resetEncoders(), driveTrain));
   }
 
   private void configureDefaultCommands() {
