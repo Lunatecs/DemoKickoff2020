@@ -23,9 +23,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.commands.DoNothingAuto;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.TrapezoidProfileCommand;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -49,6 +52,11 @@ public class RobotContainer {
                                                                         () -> {return driverJoystick.getRawAxis(1);}, 
                                                                         () -> { return driverJoystick.getRawAxis(4);});
 
+  private final DoNothingAuto nothingAuto = new DoNothingAuto(driveTrain);
+
+  SendableChooser<Command> chooser = new SendableChooser<>();
+
+
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -56,6 +64,13 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     configureDefaultCommands();
+    configureAutos();
+  }
+
+  private void configureAutos() {
+    chooser.addOption("Do Nothing", nothingAuto);
+
+    Shuffleboard.getTab("Autonomous").add(chooser);
   }
 
   /**
@@ -93,25 +108,25 @@ public class RobotContainer {
         output -> driveTrain.arcadeDrive(driverJoystick.getRawAxis(ControllerConstants.Joystick_Left_Y_Axis), output), 
         driveTrain));
 
-    SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveTrainConstants.KS,
-                                                                    DriveTrainConstants.KV,
-                                                                    DriveTrainConstants.KA);
+    // SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveTrainConstants.KS,
+    //                                                                 DriveTrainConstants.KV,
+    //                                                                 DriveTrainConstants.KA);
 
-    new JoystickButton(driverJoystick, ControllerConstants.Red_Button_ID).whenHeld(
-      new TrapezoidProfileCommand(
-                new TrapezoidProfile(
-                    // Limit the max acceleration and velocity
-                    new TrapezoidProfile.Constraints(
-                     //DriveTrainConstants.KV,
-                     //DriveTrainConstants.KA),
-                      DriveTrainConstants.MaxSpeedMetersPerSecond,
-                      DriveTrainConstants.MaxAccelerationMetersPerSecondSquared),
-                    // End at desired position in meters; implicitly starts at 0
-                    new TrapezoidProfile.State(4, 0)),
-                // Pipe the profile state to the drive
-                setpointState -> driveTrain.arcadeDrive(-feedforward.calculate(setpointState.velocity)/12.0, driveTrain.getRotation()),
-                // Require the drive
-                driveTrain).beforeStarting(() -> driveTrain.resetEncoders(), driveTrain));
+    // new JoystickButton(driverJoystick, ControllerConstants.Red_Button_ID).whenHeld(
+    //   new TrapezoidProfileCommand(
+    //             new TrapezoidProfile(
+    //                 // Limit the max acceleration and velocity
+    //                 new TrapezoidProfile.Constraints(
+    //                  //DriveTrainConstants.KV,
+    //                  //DriveTrainConstants.KA),
+    //                   DriveTrainConstants.MaxSpeedMetersPerSecond,
+    //                   DriveTrainConstants.MaxAccelerationMetersPerSecondSquared),
+    //                 // End at desired position in meters; implicitly starts at 0
+    //                 new TrapezoidProfile.State(4, 0)),
+    //             // Pipe the profile state to the drive
+    //             setpointState -> driveTrain.arcadeDrive(-feedforward.calculate(setpointState.velocity)/12.0, driveTrain.getRotation()),
+    //             // Require the drive
+    //             driveTrain).beforeStarting(() -> driveTrain.resetEncoders(), driveTrain));
   }
 
   private void configureDefaultCommands() {
@@ -127,6 +142,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return chooser.getSelected();
   }
 }
