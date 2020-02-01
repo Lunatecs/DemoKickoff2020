@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.commands.DriveWithJoystick;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LimeLight;
@@ -42,7 +43,7 @@ public class RobotContainer {
 
   private final DriveTrain driveTrain = new DriveTrain();
   private final LimeLight limeLight = new LimeLight();
-
+  private final ColorSensorSubsystem colorSensor = new ColorSensorSubsystem();
 
   private final DriveWithJoystick joystickDrive = new DriveWithJoystick(driveTrain, 
                                                                         () -> {return driverJoystick.getRawAxis(1);}, 
@@ -116,7 +117,7 @@ public class RobotContainer {
   private void configureDefaultCommands() {
     CommandScheduler scheduler = CommandScheduler.getInstance();
     scheduler.setDefaultCommand(driveTrain, joystickDrive);
-    //scheduler.registerSubsystem(driveTrain);
+    scheduler.registerSubsystem(colorSensor);
   }
 
   /**
