@@ -12,10 +12,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.commands.DriveWithJoystick;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ColorSensorSubsystem;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LimeLight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -37,10 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  // The robot's subsystems and commands are defined here...\
 
   private final Joystick driverJoystick = new Joystick(ControllerConstants.Joystick_USB_Driver);
 
